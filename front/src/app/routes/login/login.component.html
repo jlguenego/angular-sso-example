@@ -1,0 +1,24 @@
+<main>
+  <h1>Login</h1>
+  <button class="primary" (click)="connectWithSSO()">Connect with SSO</button>
+  <hr />
+  <br />
+  <br />
+  <br />
+  <div>Or connect with the good old way:</div>
+  <form [formGroup]="f" (ngSubmit)="submit()">
+    <label>
+      <input formControlName="login" type="text" placeholder="Login" />
+    </label>
+    <label>
+      <input
+        formControlName="password"
+        type="password"
+        placeholder="Password"
+      />
+    </label>
+    <button type="submit">Connect</button>
+
+    <p *ngIf="error" class="error">{{ error }}</p>
+  </form>
+</main>
