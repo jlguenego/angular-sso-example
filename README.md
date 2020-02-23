@@ -1,6 +1,6 @@
 # Angular SSO Example
 
-This project show how to use tye node-expose-sspi module with Angular.
+This project shows how to use the node-expose-sspi module with Angular.
 
 ## Usage
 
