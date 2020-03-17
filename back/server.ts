@@ -76,7 +76,8 @@ app.get('/ws/is-connected', (req, res, next) => {
   return res.status(401).end();
 });
 
-app.use(express.static('.'));
-app.use(serveIndex('.', { icons: true }));
+const www = '../front/dist/front';
+app.use(express.static(www));
+app.use(serveIndex(www, { icons: true }));
 
 app.listen(3500, () => console.log('Server started on port 3500'));
