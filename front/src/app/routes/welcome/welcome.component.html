@@ -1,4 +1,9 @@
 <main>
-  <h1>Welcome {{ user.displayName }} !</h1>
-  <button class="primary" routerLink="/">Home</button>
+  <ng-container *ngIf="user.content">
+    <h1 *ngIf="!user.content.adUser">
+      Welcome {{ user.content.displayName }} !
+    </h1>
+    <h1 *ngIf="user.content.adUser">Welcome {{ user.content.adUser.givenName }} !</h1>
+    <button class="primary" routerLink="/">Home</button>
+  </ng-container>
 </main>

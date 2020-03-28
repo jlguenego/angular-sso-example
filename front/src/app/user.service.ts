@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 interface User {
-  name: string;
-  displayName: string;
 }
 
 interface SSOOjbect {
@@ -19,8 +17,7 @@ interface ConnectWithSSOResponse {
 })
 export class UserService {
   isConnected = false;
-  displayName = '';
-  name = '';
+  content: any;
   constructor(private http: HttpClient) {
     this.checkConnection();
   }
@@ -32,12 +29,9 @@ export class UserService {
         .toPromise();
       console.log('sso', sso);
       this.isConnected = true;
-      this.displayName = sso.user.displayName;
-      this.name = sso.user.name;
+      this.content = sso.user;
     } catch (e) {
-      this.isConnected = false;
-      this.displayName = '';
-      this.name = '';
+      this.content = undefined;
     }
   }
 
@@ -48,13 +42,11 @@ export class UserService {
         .toPromise();
       console.log('sso', sso);
       this.isConnected = true;
-      this.displayName = sso.user.displayName;
-      this.name = sso.user.name;
+      this.content = sso.user;
     } catch (error) {
       console.error('error', error);
       this.isConnected = false;
-      this.displayName = '';
-      this.name = '';
+      this.content = undefined;
       throw error;
     }
   }
@@ -66,21 +58,18 @@ export class UserService {
         .toPromise();
       console.log('sso', sso);
       this.isConnected = true;
-      this.displayName = sso.user.displayName;
-      this.name = sso.user.name;
+      this.content = sso.user;
     } catch (error) {
       console.error('error', error);
       this.isConnected = false;
-      this.displayName = '';
-      this.name = '';
+      this.content = undefined;
       throw error;
     }
   }
 
   async disconnect() {
     this.isConnected = false;
-    this.displayName = '';
-    this.name = '';
+    this.content = undefined;
     try {
       await this.http.get('/ws/disconnect').toPromise();
     } catch (error) {

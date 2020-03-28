@@ -11,6 +11,7 @@ export class WelcomeComponent implements OnInit {
   constructor(public user: UserService) { }
 
   ngOnInit(): void {
+    console.log('user', this.user);
   }
 
 }

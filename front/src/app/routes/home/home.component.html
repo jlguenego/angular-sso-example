@@ -1,7 +1,10 @@
 <main>
   <h1>Home</h1>
   <ng-container *ngIf="user.isConnected">
-    <p>Hello {{ user.displayName }}!</p>
+    <p *ngIf="!user.content.adUser">Hello {{ user.content.displayName }}!</p>
+    <p *ngIf="user.content.adUser">
+      Hello {{ user.content.adUser.givenName }} {{ user.content.adUser.sn }} (AD)!
+    </p>
     <button class="primary" (click)="disconnect()">Disconnect</button>
   </ng-container>
 
