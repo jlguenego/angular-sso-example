@@ -1,18 +1,21 @@
 {
   "name": "back",
   "version": "1.0.0",
-  "description": "",
-  "keywords": [],
+  "description": "Proof of Concept of Angular using node-expose-sspi",
+  "keywords": [
+    "angular",
+    "sso"
+  ],
   "license": "ISC",
-  "author": "",
-  "main": "index.js",
+  "author": "Jean-Louis GUENEGO <jlguenego@gmail.com>",
+  "main": "src/server.ts",
   "scripts": {
     "clean": "gts clean",
     "compile": "tsc",
     "fix": "gts fix",
     "lint": "gts lint",
     "prepare": "npm run compile",
-    "start": "nodemon server.ts",
+    "start": "nodemon",
     "pretest": "npm run compile",
     "posttest": "npm run lint"
   },
