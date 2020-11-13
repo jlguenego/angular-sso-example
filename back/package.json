@@ -16,6 +16,7 @@
     "lint": "gts lint",
     "prepare": "npm run compile",
     "start": "nodemon",
+    "start:js": "node build/src/server.js",
     "pretest": "npm run compile",
     "posttest": "npm run lint"
   },
