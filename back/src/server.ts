@@ -1,7 +1,7 @@
 import express = require('express');
 import serveIndex = require('serve-index');
 import session = require('express-session');
-import { sso, UserCredential } from 'node-expose-sspi';
+import {sso, UserCredential} from 'node-expose-sspi';
 
 const app = express();
 
@@ -20,14 +20,14 @@ app.use(
 );
 
 app.use('/ws/protected', (req, res, next) => {
-  if (!req.session.sso) {
+  if (!req.session?.sso) {
     return res.status(401).end();
   }
   next();
 });
 
 app.use('/ws/protected/secret', (req, res) => {
-  res.json({ hello: 'word!' });
+  res.json({hello: 'word!'});
 });
 
 app.get('/ws/connect-with-sso', sso.auth(), (req, res) => {
@@ -35,7 +35,9 @@ app.get('/ws/connect-with-sso', sso.auth(), (req, res) => {
   if (!req.sso) {
     return res.status(401).end();
   }
-  req.session.sso = req.sso;
+  if (req.session) {
+    req.session.sso = req.sso;
+  }
   return res.json({
     sso: req.sso,
   });
@@ -54,7 +56,7 @@ app.post('/ws/connect', async (req, res) => {
   console.log('credentials: ', credentials);
   const ssoObject = await sso.connect(credentials);
   console.log('ssoObject: ', ssoObject);
-  if (ssoObject) {
+  if (ssoObject && req.session) {
     req.session.sso = ssoObject;
     return res.json({
       sso: req.session.sso,
@@ -66,19 +68,21 @@ app.post('/ws/connect', async (req, res) => {
 });
 
 app.get('/ws/disconnect', (req, res) => {
-  delete req.session.sso;
+  if (req.session) {
+    delete req.session.sso;
+  }
   return res.json({});
 });
 
 app.get('/ws/is-connected', (req, res) => {
-  if (req.session.sso) {
-    return res.json({ sso: req.session.sso });
+  if (req.session?.sso) {
+    return res.json({sso: req.session.sso});
   }
   return res.status(401).end();
 });
 
 const www = '../front/dist/front';
 app.use(express.static(www));
-app.use(serveIndex(www, { icons: true }));
+app.use(serveIndex(www, {icons: true}));
 
 app.listen(3500, () => console.log('Server started on port 3500'));
