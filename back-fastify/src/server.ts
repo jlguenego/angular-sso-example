@@ -24,17 +24,24 @@ const start = async (): Promise<void> => {
 
     fastify.use('/ws/connect-with-sso', sso.auth({useSession: true}));
 
-    fastify.addHook('onRequest', (request, reply, done) => {
+    fastify.addHook('preHandler', (request, reply, done) => {
+      console.log('preHandler');
       if (!request.url.startsWith('/ws/protected')) {
-        return done();
+        console.log('preHandler done');
+        done();
+        return;
       }
+      console.log('check if session');
       if (!request.session?.sso) {
         reply.code(401);
-        return done(new Error('Authentication error'));
+        done(new Error('Authentication error'));
+        return;
       }
+      done();
     });
 
     fastify.get('/ws/protected/secret', (request, reply): void => {
+      console.log('show the secret');
       reply.send({hello: 'word!'});
     });
 
@@ -45,6 +52,7 @@ const start = async (): Promise<void> => {
         reply.send();
         return;
       }
+      request.session.sso = request.raw.sso;
       reply.send({
         sso: request.raw.sso,
       });
