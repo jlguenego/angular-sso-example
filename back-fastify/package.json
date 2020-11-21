@@ -21,6 +21,7 @@
     "fastify": "^3.8.0",
     "fastify-cookie": "^4.1.0",
     "fastify-cors": "^4.1.0",
+    "fastify-session": "^5.2.1",
     "middie": "^5.2.0",
     "node-expose-sspi": "^0.1.51",
     "nodemon": "^2.0.6",
