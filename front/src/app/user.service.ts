@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 interface User {
+  name: string;
 }
 
 interface SSOOjbect {
@@ -12,20 +13,22 @@ interface ConnectWithSSOResponse {
   sso: SSOOjbect;
 }
 
+const domainUrl = 'http://localhost:3500';
+
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   isConnected = false;
-  content: any;
+  content: object | undefined;
   constructor(private http: HttpClient) {
     this.checkConnection();
   }
 
-  async checkConnection() {
+  async checkConnection(): Promise<void> {
     try {
       const { sso } = await this.http
-        .get<ConnectWithSSOResponse>('/ws/is-connected')
+        .get<ConnectWithSSOResponse>(domainUrl + '/ws/is-connected')
         .toPromise();
       console.log('sso', sso);
       this.isConnected = true;
@@ -35,10 +38,10 @@ export class UserService {
     }
   }
 
-  async connectWithSSO() {
+  async connectWithSSO(): Promise<void> {
     try {
       const { sso } = await this.http
-        .get<ConnectWithSSOResponse>('/ws/connect-with-sso')
+        .get<ConnectWithSSOResponse>(domainUrl + '/ws/connect-with-sso')
         .toPromise();
       console.log('sso', sso);
       this.isConnected = true;
@@ -51,10 +54,10 @@ export class UserService {
     }
   }
 
-  async connect(f: { login: string; password: string }) {
+  async connect(f: { login: string; password: string }): Promise<void> {
     try {
       const { sso } = await this.http
-        .post<ConnectWithSSOResponse>('/ws/connect', f)
+        .post<ConnectWithSSOResponse>(domainUrl + '/ws/connect', f)
         .toPromise();
       console.log('sso', sso);
       this.isConnected = true;
@@ -67,19 +70,21 @@ export class UserService {
     }
   }
 
-  async disconnect() {
+  async disconnect(): Promise<void> {
     this.isConnected = false;
     this.content = undefined;
     try {
-      await this.http.get('/ws/disconnect').toPromise();
+      await this.http.get(domainUrl + '/ws/disconnect').toPromise();
     } catch (error) {
       console.error('error', error);
     }
   }
 
-  async showSecret() {
+  async showSecret(): Promise<object> {
     try {
-      const secret = await this.http.get('/ws/protected/secret').toPromise();
+      const secret = await this.http
+        .get<object>(domainUrl + '/ws/protected/secret')
+        .toPromise();
       return secret;
     } catch (e) {
       throw { msg: 'You probably need to be connected to see my secret' };

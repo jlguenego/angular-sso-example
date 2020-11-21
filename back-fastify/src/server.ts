@@ -3,6 +3,7 @@ import f from 'fastify';
 import middie from 'middie';
 import fastifySession from 'fastify-session';
 import fastifyCookie from 'fastify-cookie';
+import fastifyCors from 'fastify-cors';
 import {sso, UserCredential} from 'node-expose-sspi';
 
 const fastify = f({logger: true});
@@ -10,6 +11,9 @@ const fastify = f({logger: true});
 // Run the server!
 const start = async (): Promise<void> => {
   try {
+    fastify.register(fastifyCors, {
+      // put your options here
+    });
     fastify.addHook('onRequest', (request, reply, done) => {
       // will be executed before the middie because registered before.
       console.log('request.url', request.url);
