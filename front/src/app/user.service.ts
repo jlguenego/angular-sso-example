@@ -28,7 +28,9 @@ export class UserService {
   async checkConnection(): Promise<void> {
     try {
       const { sso } = await this.http
-        .get<ConnectWithSSOResponse>(domainUrl + '/ws/is-connected')
+        .get<ConnectWithSSOResponse>(domainUrl + '/ws/is-connected', {
+          withCredentials: true,
+        })
         .toPromise();
       console.log('sso', sso);
       this.isConnected = true;
@@ -59,7 +61,9 @@ export class UserService {
   async connect(f: { login: string; password: string }): Promise<void> {
     try {
       const { sso } = await this.http
-        .post<ConnectWithSSOResponse>(domainUrl + '/ws/connect', f)
+        .post<ConnectWithSSOResponse>(domainUrl + '/ws/connect', f, {
+          withCredentials: true,
+        })
         .toPromise();
       console.log('sso', sso);
       this.isConnected = true;
@@ -76,7 +80,11 @@ export class UserService {
     this.isConnected = false;
     this.content = undefined;
     try {
-      await this.http.get(domainUrl + '/ws/disconnect').toPromise();
+      await this.http
+        .get(domainUrl + '/ws/disconnect', {
+          withCredentials: true,
+        })
+        .toPromise();
     } catch (error) {
       console.error('error', error);
     }
@@ -85,7 +93,9 @@ export class UserService {
   async showSecret(): Promise<object> {
     try {
       const secret = await this.http
-        .get<object>(domainUrl + '/ws/protected/secret')
+        .get<object>(domainUrl + '/ws/protected/secret', {
+          withCredentials: true,
+        })
         .toPromise();
       return secret;
     } catch (e) {
