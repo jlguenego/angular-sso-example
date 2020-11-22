@@ -2,13 +2,25 @@ import express = require('express');
 import serveIndex = require('serve-index');
 import session = require('express-session');
 import {sso, UserCredential} from 'node-expose-sspi';
+import cors from 'cors';
 
 const app = express();
 
 app.use((req, res, next) => {
   console.log('req.url', req.url);
+  console.log('origin', req.headers.origin);
   next();
 });
+
+app.use(
+  cors((req, callback) => {
+    const options = {
+      credentials: true,
+      origin: req.headers.origin,
+    };
+    callback(null, options);
+  })
+);
 
 app.use(express.json());
 app.use(
