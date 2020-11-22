@@ -26,26 +26,14 @@ const start = async (): Promise<void> => {
     });
 
     fastify.use(
-      cors({
-        credentials: true,
+      cors((req, callback) => {
+        const options = {
+          credentials: true,
+          origin: req.headers.origin,
+        };
+        callback(null, options);
       }) as NextHandleFunction
     );
-
-    fastify.use((req, res, next) => {
-      res.setHeader(
-        'Access-Control-Allow-Headers',
-        'WWW-Authenticate, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Headers, Access-Control-Request-Method'
-      );
-      res.setHeader(
-        'Access-Control-Allow-Methods',
-        'GET, POST, PUT, DELETE, HEAD, OPTIONS'
-      );
-      if (req.method === 'OPTIONS') {
-        res.statusCode = 200;
-        res.end();
-      }
-      next();
-    });
 
     fastify.use('/ws/connect-with-sso', sso.auth({useSession: true}));
 

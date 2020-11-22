@@ -26,6 +26,12 @@ Enjoy!
 
 Just read the code to understand.
 
+## Note
+
+Instead of using the `back` directory, you can also use the `back-fastify` directory.
+
+It is the same code behavior, but using Fastify instead of express.
+
 ## Author
 
 Jean-Louis GUENEGO
