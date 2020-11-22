@@ -3,20 +3,19 @@ import f from 'fastify';
 import middie from 'middie';
 import fastifySession from 'fastify-session';
 import fastifyCookie from 'fastify-cookie';
-import fastifyCors from 'fastify-cors';
 import {sso, UserCredential} from 'node-expose-sspi';
+import cors from 'cors';
+import {NextHandleFunction} from 'connect';
 
 const fastify = f({logger: true});
 
 // Run the server!
 const start = async (): Promise<void> => {
   try {
-    fastify.register(fastifyCors, {
-      // put your options here
-    });
     fastify.addHook('onRequest', (request, reply, done) => {
       // will be executed before the middie because registered before.
       console.log('request.url', request.url);
+      console.log('request.method', request.method);
       done();
     });
     await fastify.register(middie);
@@ -24,6 +23,28 @@ const start = async (): Promise<void> => {
     await fastify.register(fastifySession, {
       secret: 'this is my secret with more than 32 characters...',
       cookie: {secure: false}, // to work on localhost
+    });
+
+    fastify.use(
+      cors({
+        credentials: true,
+      }) as NextHandleFunction
+    );
+
+    fastify.use((req, res, next) => {
+      res.setHeader(
+        'Access-Control-Allow-Headers',
+        'WWW-Authenticate, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Headers, Access-Control-Request-Method'
+      );
+      res.setHeader(
+        'Access-Control-Allow-Methods',
+        'GET, POST, PUT, DELETE, HEAD, OPTIONS'
+      );
+      if (req.method === 'OPTIONS') {
+        res.statusCode = 200;
+        res.end();
+      }
+      next();
     });
 
     fastify.use('/ws/connect-with-sso', sso.auth({useSession: true}));
@@ -50,13 +71,16 @@ const start = async (): Promise<void> => {
     });
 
     fastify.get('/ws/connect-with-sso', (request, reply): void => {
-      console.log(request.raw.sso);
+      console.log('request.raw.sso', request.raw.sso);
       if (!request.raw.sso) {
+        console.log('respond 401');
         reply.statusCode = 401;
         reply.send();
         return;
       }
+      console.log('connection successfull');
       request.session.sso = request.raw.sso;
+      reply.statusCode = 200;
       reply.send({
         sso: request.raw.sso,
       });

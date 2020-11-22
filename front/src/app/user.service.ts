@@ -41,7 +41,9 @@ export class UserService {
   async connectWithSSO(): Promise<void> {
     try {
       const { sso } = await this.http
-        .get<ConnectWithSSOResponse>(domainUrl + '/ws/connect-with-sso')
+        .get<ConnectWithSSOResponse>(domainUrl + '/ws/connect-with-sso', {
+          withCredentials: true,
+        })
         .toPromise();
       console.log('sso', sso);
       this.isConnected = true;
