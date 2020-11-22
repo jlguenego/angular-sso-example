@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  async connectWithSSO() {
+  async connectWithSSO(): Promise<void> {
     try {
       await this.user.connectWithSSO();
       this.router.navigateByUrl('/welcome');
@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  async submit() {
+  async submit(): Promise<void> {
     this.error = '';
     console.log('submit');
     try {
