@@ -61,7 +61,7 @@ app.post('/ws/connect', async (req, res) => {
   console.log('domain: ', domain);
 
   const credentials: UserCredential = {
-    domain,
+    domain:'',
     user: req.body.login,
     password: req.body.password,
   };

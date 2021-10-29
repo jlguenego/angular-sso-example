@@ -13,14 +13,15 @@ interface ConnectWithSSOResponse {
   sso: SSOOjbect;
 }
 
-const domainUrl = 'http://localhost:3500';
+const domainUrl = 'http://<server>:3500';
+function getDomainUrl () {return domainUrl.replace('<server>',window.location.hostname);}
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   isConnected = false;
-  content: object | undefined;
+  content: any | undefined;
   constructor(private http: HttpClient) {
     this.checkConnection();
   }
@@ -28,7 +29,7 @@ export class UserService {
   async checkConnection(): Promise<void> {
     try {
       const { sso } = await this.http
-        .get<ConnectWithSSOResponse>(domainUrl + '/ws/is-connected', {
+        .get<ConnectWithSSOResponse>(getDomainUrl() + '/ws/is-connected', {
           withCredentials: true,
         })
         .toPromise();
@@ -43,7 +44,7 @@ export class UserService {
   async connectWithSSO(): Promise<void> {
     try {
       const { sso } = await this.http
-        .get<ConnectWithSSOResponse>(domainUrl + '/ws/connect-with-sso', {
+        .get<ConnectWithSSOResponse>(getDomainUrl() + '/ws/connect-with-sso', {
           withCredentials: true,
         })
         .toPromise();
@@ -61,7 +62,7 @@ export class UserService {
   async connect(f: { login: string; password: string }): Promise<void> {
     try {
       const { sso } = await this.http
-        .post<ConnectWithSSOResponse>(domainUrl + '/ws/connect', f, {
+        .post<ConnectWithSSOResponse>(getDomainUrl() + '/ws/connect', f, {
           withCredentials: true,
         })
         .toPromise();
@@ -81,7 +82,7 @@ export class UserService {
     this.content = undefined;
     try {
       await this.http
-        .get(domainUrl + '/ws/disconnect', {
+        .get(getDomainUrl() + '/ws/disconnect', {
           withCredentials: true,
         })
         .toPromise();
@@ -93,7 +94,7 @@ export class UserService {
   async showSecret(): Promise<object> {
     try {
       const secret = await this.http
-        .get<object>(domainUrl + '/ws/protected/secret', {
+        .get<object>(getDomainUrl() + '/ws/protected/secret', {
           withCredentials: true,
         })
         .toPromise();
