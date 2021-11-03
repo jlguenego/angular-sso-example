@@ -13,7 +13,7 @@ interface ConnectWithSSOResponse {
   sso: SSOOjbect;
 }
 
-const domainUrl = 'http://<server>/mysso';
+const domainUrl = 'http://<server>:3500/mysso';
 function getDomainUrl () {return domainUrl.replace('<server>',window.location.hostname);}
 
 @Injectable({

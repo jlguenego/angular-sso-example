@@ -3,6 +3,7 @@ import serveIndex = require('serve-index');
 import session = require('express-session');
 import {sso, UserCredential} from 'node-expose-sspi';
 import cors from 'cors';
+import os = require("os");
 
 const app = express();
 
@@ -16,7 +17,7 @@ app.use(
   cors((req, callback) => {
     const options = {
       credentials: true,
-      origin: req.headers.origin,
+      origin: 'http://' + req.headers.host?.replace(':3500',':4200')??'',
     };
     callback(null, options);
   })
@@ -40,6 +41,10 @@ app.use('/mysso/ws/protected', (req, res, next) => {
 
 app.use('/mysso/ws/protected/secret', (req, res) => {
   res.json({hello: 'word!'});
+});
+
+app.use('/mysso/ws/myhost',(req, res) => {
+  return res.json({http_host: 'http://' + req.headers.host?.replace(':3500',':4200')??'', machine_host: os.hostname()})
 });
 
 app.get('/mysso/ws/connect-with-sso', sso.auth(), (req, res) => {
