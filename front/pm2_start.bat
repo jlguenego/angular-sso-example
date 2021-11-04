@@ -1,0 +1,1 @@
+pm2 start "c:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js" --name "my angular sso" -- run start_host
